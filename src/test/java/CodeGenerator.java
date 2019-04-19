@@ -59,6 +59,18 @@ public class CodeGenerator {
      * @param modelName 自定义的 Model 名称
      */
     public static void genCodeByCustomModelName(String tableName, String modelName) {
+      //没有自定义自定义的 Model 名称，且采用标准命名格式的表名，自动生成类名 "t_user_detail" 将生成 UserDetail
+		if (StringUtils.isBlank(modelName) && tableName.contains("t_")
+				&& tableName.indexOf("t_") == 0) {
+			modelName = tableName.substring(1);
+			int initialIndex = modelName.indexOf("_") + 1;
+			while (initialIndex != 0) {
+				String initial = "" + modelName.charAt(initialIndex);
+				String initialUpper = initial.toUpperCase();
+				modelName = modelName.replace("_" + initial, initialUpper);
+				initialIndex = modelName.indexOf("_") + 1;
+			}
+		}
         genModelAndMapper(tableName, modelName);
         genService(tableName, modelName);
         genController(tableName, modelName);
